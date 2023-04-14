@@ -16,6 +16,7 @@ const contactsSlice = createSlice({
         state.push(action.payload);
       },
       prepare(data) {
+        console.log(data);
         return {
           payload: {
             ...data,
