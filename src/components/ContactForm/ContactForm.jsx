@@ -1,8 +1,10 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { Field, Form, Label, SubmitBtn } from './ContactForm.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/operations';
+import { getContacts } from 'redux/selectors';
+import { toast } from 'react-toastify';
 
 const initialValues = {
   name: '',
@@ -11,11 +13,17 @@ const initialValues = {
 
 const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={(values, actions) => {
+        if (contacts.find(contact => contact.name === values.name)) {
+          toast.error('A user with such name already exists');
+          return;
+        }
+
         dispatch(addContact(values));
         actions.resetForm();
       }}
